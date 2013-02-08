@@ -11,7 +11,6 @@ import view.Canvas;
 
 /**
  * Creates Springies universe
- * 
  * @author Jerry Li
  */
 public class Model {
