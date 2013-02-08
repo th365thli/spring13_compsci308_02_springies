@@ -45,6 +45,8 @@ public class Muscle extends Spring {
 
     /**
      * Updates the length of the muscle based on harmonic oscillation equation.
+     * @param elapsedTime
+     * @param bounds
      */
     @Override
     public void update (double elapsedTime, Dimension bounds) {
