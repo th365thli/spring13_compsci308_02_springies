@@ -9,8 +9,6 @@ import util.Sprite;
 import util.Vector;
 
 
-
-
 public class Gravity {
    
     private double gravitySpeed;
