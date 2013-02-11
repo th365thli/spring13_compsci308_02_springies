@@ -147,6 +147,10 @@ public class Canvas extends JComponent {
     /**
      * Create listeners that will update state based on user input.
      */
+    
+    public void clearKeys(){
+        myKeys.clear();
+    }
     private void setInputListeners () {
         // initialize input state
         myLastKeyPressed = NO_KEY_PRESSED;
@@ -185,11 +189,12 @@ public class Canvas extends JComponent {
     }
 
     // load model from file chosen by user
-    private void loadModel () {
+    public void loadModel () {
         Factory factory = new Factory();
         int response = INPUT_CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
             factory.loadModel(mySimulation, INPUT_CHOOSER.getSelectedFile());
         }
     }
+    
 }

@@ -1,12 +1,13 @@
 package simulation;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.List;
 import util.Vector;
 import view.Canvas;
+import java.util.*;
 
 //test commit
 
@@ -20,6 +21,8 @@ public class Model {
     // simulation state
     private List<Mass> myMasses;
     private List<Spring> mySprings;
+    
+    private Gravity myGravity;
 
     private double myTotalMass;
     private double myTotalXMass;
@@ -27,8 +30,15 @@ public class Model {
 
     private double myCenterXMass;
     private double myCenterYMass;
+    
+    private double myGravitySpeed = 7;
+    
+    private boolean myGravityOn = true;
 
     private double myCenterExponentValue = 2;
+    
+    private static final int LOAD_NEW = KeyEvent.VK_N;
+    private static final int GRAVITY_TOGGLE = KeyEvent.VK_G;
 
     /**
      * Create a game of the given size with the given display for its shapes.
@@ -38,6 +48,7 @@ public class Model {
         myView = canvas;
         myMasses = new ArrayList<Mass>();
         mySprings = new ArrayList<Spring>();
+        myGravity = new Gravity(myGravitySpeed);
 
     }
 
@@ -78,7 +89,22 @@ public class Model {
      * @param elapsedTime 
      */
     public void update (double elapsedTime) {
-
+        int key = myView.getLastKeyPressed();
+        
+        if (key == GRAVITY_TOGGLE){
+            if (myView.getKeysPressed().contains(key)){
+              myGravity.toggleGravity();
+            }        
+        }
+        
+        if (key == LOAD_NEW) {
+           if (myView.getKeysPressed().contains(key)){
+               myView.clearKeys();
+               reset();
+               myView.loadModel();
+           }
+        }
+        System.out.println(key);
         calculateCenterXMass();
         calculateCenterYMass();
 
@@ -87,11 +113,14 @@ public class Model {
             s.update(elapsedTime, bounds);
         }
         for (Mass m : myMasses) {
+            if (myGravityOn) {
+                myGravity.update(m);
+            }
             m.update(elapsedTime, bounds);
             applyCenterOfMass(m);
         }
     }
-
+    
     /**
      * Set the exponent value used in calculating force
      * @param x
@@ -174,5 +203,10 @@ public class Model {
      */
     public void add (Spring spring) {
         mySprings.add(spring);
+    }
+    
+    public void reset(){
+        myMasses.clear();
+        mySprings.clear();
     }
 }

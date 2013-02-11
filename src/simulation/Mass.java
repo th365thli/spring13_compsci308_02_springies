@@ -22,7 +22,7 @@ public class Mass extends Sprite {
     private double myMass;
     private Vector myAcceleration;
     private double viscosityValue;
-    private double gravitySpeed;
+//    private double gravitySpeed;
 
     /**
      * Constructs a mass based on coordinates, mass value, viscosity, and gravity acting
@@ -33,7 +33,7 @@ public class Mass extends Sprite {
         myMass = mass;
         myAcceleration = new Vector();
         viscosityValue = viscosity;
-        gravitySpeed = gravity;
+        
     }
 
     /**
@@ -53,23 +53,12 @@ public class Mass extends Sprite {
     public void update (double elapsedTime, Dimension bounds) {
         getBounce(bounds);
         // convert force back into Mover's velocity
-        applyGravity(bounds);
         applyViscosity(bounds);
         repel(bounds);
         getVelocity().sum(myAcceleration);
         myAcceleration.reset();
         // move mass by velocity
         super.update(elapsedTime, bounds);
-    }
-
-    /**
-     * Applies gravitational force on mass
-     * 
-     * @param bounds
-     */
-    public void applyGravity (Dimension bounds) {
-        Vector downwardAcceleration = new Vector(90, gravitySpeed);
-        applyForce(downwardAcceleration);
     }
 
     /**
