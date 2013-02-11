@@ -22,7 +22,7 @@ public class Gravity {
         m.applyForce(downwardAcceleration);
     }
     
-    public void toggleGravity(){
+    public void toggleGravity() {
        if (myGravitySpeed != 0) {
            myGravitySpeed = 0;
        }

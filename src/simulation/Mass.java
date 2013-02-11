@@ -21,8 +21,6 @@ public class Mass extends Sprite {
 
     private double myMass;
     private Vector myAcceleration;
-    private double viscosityValue;
-//    private double gravitySpeed;
 
     /**
      * Constructs a mass based on coordinates, mass value, viscosity, and gravity acting
@@ -32,7 +30,6 @@ public class Mass extends Sprite {
         super(DEFUALT_IMAGE, new Location(x, y), DEFAULT_SIZE);
         myMass = mass;
         myAcceleration = new Vector();
-        viscosityValue = viscosity;
         
     }
 
@@ -44,7 +41,16 @@ public class Mass extends Sprite {
     public double getMyMass () {
         return myMass;
     }
-
+    
+    public Vector getAcceleration() {
+        return myAcceleration;
+    }
+    
+    public void changeAcceleration(Vector v) {
+        myAcceleration = v;
+    }
+    
+    
     /**
      * Updates mass position based on forces acting upon it.
      * Calls update methods for gravity, viscosity, wall repulsion
@@ -53,138 +59,10 @@ public class Mass extends Sprite {
     public void update (double elapsedTime, Dimension bounds) {
         getBounce(bounds);
         // convert force back into Mover's velocity
-        applyViscosity(bounds);
-        repel(bounds);
         getVelocity().sum(myAcceleration);
         myAcceleration.reset();
         // move mass by velocity
         super.update(elapsedTime, bounds);
-    }
-
-    /**
-     * Applies viscosity resistance to mass
-     * 
-     * @param bounds
-     */
-    public void applyViscosity (Dimension bounds) {
-        double viscosity = myAcceleration.getMagnitude() * viscosityValue;
-        myAcceleration = new Vector(myAcceleration.getDirection(),
-                                    myAcceleration.getMagnitude() - viscosity);
-    }
-
-    /**
-     * Applies repulsion force from walls on mass
-     * 
-     * @param bounds
-     */
-    public void wallRepulsion (Dimension bounds) {
-
-        double leftProximity = proximityToLeftWall(bounds);
-        double rightProximity = proximityToRightWall(bounds);
-        double topProximity = proximityToTopWall(bounds);
-        double bottomProximity = proximityToBottomWall(bounds);
-
-        Vector leftRepulsion = leftRepulsion(calculateRepulsion(leftProximity, -.01));
-        Vector rightRepulsion = rightRepulsion(calculateRepulsion(rightProximity, -.01));
-        Vector topRepulsion = topRepulsion(calculateRepulsion(topProximity, -.01));
-        Vector bottomRepulsion = bottomRepulsion(calculateRepulsion(bottomProximity, -.01));
-
-        myAcceleration.sum(leftRepulsion);
-        myAcceleration.sum(rightRepulsion);
-        myAcceleration.sum(topRepulsion);
-        myAcceleration.sum(bottomRepulsion);
-
-    }
-
-    /**
-     * Only calls wallrepulsion if mass is within bounds
-     * 
-     * @param bounds
-     */
-    public void repel (Dimension bounds) {
-        if ((getLeft() > 0) &&
-            (getRight() < bounds.width) &&
-            (getTop() > 0) &&
-            (getBottom() < bounds.height)) {
-            wallRepulsion(bounds);
-        }
-    }
-
-    /**
-     * Gets distance from left wall
-     * 
-     * @param bounds
-     * @return bounds.width - getLeft();
-     */
-    public double proximityToLeftWall (Dimension bounds) {
-        return bounds.width - getLeft();
-    }
-
-    /**
-     * Gets distance from right wall
-     * 
-     * @param bounds
-     * @return getRight();
-     */
-    public double proximityToRightWall (Dimension bounds) {
-        return getRight();
-    }
-
-    /**
-     * Gets distance from top wall
-     * 
-     * @param bounds
-     * @return bounds.height - getBottom();
-     */
-    public double proximityToTopWall (Dimension bounds) {
-        return bounds.height - getBottom();
-    }
-
-    /**
-     * Gets distance from bottom wall
-     * 
-     * @param bounds
-     * @return getBottom();
-     */
-    public double proximityToBottomWall (Dimension bounds) {
-        return getBottom();
-    }
-
-    /**
-     * Calculate repulsion force
-     * 
-     * @param proximity
-     * @param force
-     * @return (1/Math.pow(proximity, force));
-     */
-    public double calculateRepulsion (double proximity, double force) {
-        return (1 / Math.pow(proximity, force));
-    }
-
-    /**
-     * Creates vectors based on proximity to specified wall and force
-     * 
-     * @param force
-     * @return repulsion
-     */
-    public Vector leftRepulsion (double force) {
-        final Vector repulsion = new Vector(0, force);
-        return repulsion;
-    }
-
-    public Vector rightRepulsion (double force) {
-        final Vector repulsion = new Vector(180, force);
-        return repulsion;
-    }
-
-    public Vector topRepulsion (double force) {
-        final Vector repulsion = new Vector(90, force);
-        return repulsion;
-    }
-
-    public Vector bottomRepulsion (double force) {
-        final Vector repulsion = new Vector(270, force);
-        return repulsion;
     }
 
     /**

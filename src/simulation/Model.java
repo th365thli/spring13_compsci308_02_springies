@@ -23,6 +23,8 @@ public class Model {
     private List<Spring> mySprings;
     
     private Gravity myGravity;
+    private Viscosity myViscosity;
+    private WallRepulsion myWallRepulsion;
 
     private double myTotalMass;
     private double myTotalXMass;
@@ -32,9 +34,9 @@ public class Model {
     private double myCenterYMass;
     
     private double myGravitySpeed = 7;
+    private double myViscosityValue = .5;
+    private double myWallRepulsionFactor = -.01;
     
-    private boolean myGravityOn = true;
-
     private double myCenterExponentValue = 2;
     
     private static final int LOAD_NEW = KeyEvent.VK_N;
@@ -49,6 +51,8 @@ public class Model {
         myMasses = new ArrayList<Mass>();
         mySprings = new ArrayList<Spring>();
         myGravity = new Gravity(myGravitySpeed);
+        myViscosity = new Viscosity(myViscosityValue);
+        myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
 
     }
 
@@ -90,20 +94,8 @@ public class Model {
      */
     public void update (double elapsedTime) {
         int key = myView.getLastKeyPressed();
-        
-        if (key == GRAVITY_TOGGLE){
-            if (myView.getKeysPressed().contains(key)){
-              myGravity.toggleGravity();
-            }        
-        }
-        
-        if (key == LOAD_NEW) {
-           if (myView.getKeysPressed().contains(key)){
-               myView.clearKeys();
-               reset();
-               myView.loadModel();
-           }
-        }
+        toggleGravity(key);
+        loadFile(key);
         System.out.println(key);
         calculateCenterXMass();
         calculateCenterYMass();
@@ -113,13 +105,33 @@ public class Model {
             s.update(elapsedTime, bounds);
         }
         for (Mass m : myMasses) {
-            if (myGravityOn) {
-                myGravity.update(m);
-            }
+            myWallRepulsion.update(bounds, m);
+            myViscosity.update(m);
+            myGravity.update(m);
             m.update(elapsedTime, bounds);
             applyCenterOfMass(m);
         }
     }
+    
+    public void toggleGravity(int key) {
+        if (key == GRAVITY_TOGGLE){
+            if (myView.getKeysPressed().contains(key)){
+              myGravity.toggleGravity();
+            }        
+        }
+    }
+    
+    public void loadFile(int key) {
+        if (key == LOAD_NEW) {
+            if (myView.getKeysPressed().contains(key)){
+                myView.clearKeys();
+                reset();
+                myView.loadModel();
+            }
+         }
+    }
+    
+    
     
     /**
      * Set the exponent value used in calculating force
