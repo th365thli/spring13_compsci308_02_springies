@@ -3,7 +3,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import view.Canvas;
 
-//kiron help
+//fuck git
 /**
  * Creates window that can be moved, resized, and closed by the user.
  * 
