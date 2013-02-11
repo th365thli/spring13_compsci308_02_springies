@@ -5,12 +5,12 @@ import util.Vector;
 
 public class Gravity {
    
-    private double gravitySpeed;
-    private double toggleGravitySpeedHolder;
+    private double myGravitySpeed;
+    private double myRoggleGravitySpeedHolder;
     
     public Gravity(double grav) {
-        gravitySpeed = grav;
-        toggleGravitySpeedHolder = grav;
+        myGravitySpeed = grav;
+        myRoggleGravitySpeedHolder = grav;
     }
     
     public void update(Mass m) {
@@ -18,16 +18,16 @@ public class Gravity {
     }
     
     public void applyGravity (Mass m) {
-        Vector downwardAcceleration = new Vector(90, gravitySpeed);
+        Vector downwardAcceleration = new Vector(90, myGravitySpeed);
         m.applyForce(downwardAcceleration);
     }
     
-    public void toggleGravity() {
-       if (gravitySpeed != 0) {
-           gravitySpeed = 0;
+    public void toggleGravity(){
+       if (myGravitySpeed != 0) {
+           myGravitySpeed = 0;
        }
        else {
-           gravitySpeed = toggleGravitySpeedHolder;
+           myGravitySpeed = myRoggleGravitySpeedHolder;
        }
     }
 
