@@ -9,13 +9,19 @@ import util.Pixmap;
  * The only difference is the change in length based
  * on equation
  * 
- * @author Jerry Li
+ * @author Jerry Li & Bill Muensterman
  * 
  */
 
 public class Muscle extends Spring {
-
+    
+    /**
+     * picture of spring
+     */
     public static final Pixmap DEFUALT_IMAGE = new Pixmap("spring.gif");
+    /**
+     * initial length of muscle
+     */
     public static final int IMAGE_HEIGHT = 20;
 
     private double myRestLength;
@@ -27,13 +33,13 @@ public class Muscle extends Spring {
      * Takes in masses, length, hookes constant, amplitude, delay value, and frequency
      * to construct a muscle.
      * 
-     * @param start
-     * @param end
-     * @param length
-     * @param kVal
-     * @param amp
-     * @param delay
-     * @param freq
+     * @param start     first mass
+     * @param end       second mass     
+     * @param length    initial length of spring
+     * @param kVal      hooke's constant
+     * @param amp       amplitude
+     * @param delay     delay
+     * @param freq      frequency
      */
     public Muscle (Mass start, Mass end, double length, double kVal,
                    double amp, double delay, double freq) {
@@ -46,8 +52,8 @@ public class Muscle extends Spring {
     /**
      * Updates the length of the muscle based on harmonic oscillation equation.
      * 
-     * @param elapsedTime
-     * @param bounds
+     * @param elapsedTime       framerate
+     * @param bounds            size of simulation
      */
     @Override
     public void update (double elapsedTime, Dimension bounds) {

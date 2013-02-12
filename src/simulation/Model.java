@@ -1,5 +1,6 @@
 package simulation;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -7,20 +8,15 @@ import java.util.List;
 import view.Canvas;
 
 
-// test commit
-
 /**
  * Creates Springies universe
  * 
- * @author Jerry Li
+ * @author Jerry Li & Bill Muensterman
  */
 public class Model {
-    // bounds and input for game
-    private Canvas myView;
-    // simulation state
-    private List<Mass> myMasses;
-    private List<Assembly> myAssemblies;
-
+    private static final double GRAVITY_SPEED = 7;
+    private static final double VISCOSITY = .01;
+    private static final double WALL_REPULSION = -.01;
     private static final int LOAD_NEW = KeyEvent.VK_N;
     private static final int GRAVITY_TOGGLE = KeyEvent.VK_G;
     private static final int VISCOSITY_TOGGLE = KeyEvent.VK_V;
@@ -30,6 +26,22 @@ public class Model {
     private static final int RIGHT_WALL = KeyEvent.VK_3;
     private static final int LEFT_WALL = KeyEvent.VK_4;
     private static final int CLEAR = KeyEvent.VK_C;
+    private static final int INCREASE_SIZE = KeyEvent.VK_UP;
+    private static final int DECREASE_SIZE = KeyEvent.VK_DOWN;
+    private static final int RESIZE_FACTOR = 10;
+    private final double myGravitySpeed = GRAVITY_SPEED;
+    private final double myViscosityValue = VISCOSITY;
+    private final double myWallRepulsionFactor = WALL_REPULSION;
+    
+    // bounds and input for game
+    private Canvas myView;
+    // simulation state
+    private List<Mass> myMasses;
+    private List<Assembly> myAssemblies;
+
+    private Gravity myGravity;
+    private Viscosity myViscosity;
+    private WallRepulsion myWallRepulsion;
 
     /**
      * Create a game of the given size with the given display for its shapes.
@@ -38,7 +50,11 @@ public class Model {
      */
     public Model (Canvas canvas) {
         myView = canvas;
+        myMasses = new ArrayList<>();
         myAssemblies = new ArrayList<>();
+        myGravity = new Gravity(myGravitySpeed);
+        myViscosity = new Viscosity(myViscosityValue);
+        myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
         myAssemblies.add(myView.getAssembly());
 
     }
@@ -64,9 +80,32 @@ public class Model {
     }
 
     /**
+     * changeCanvasSize
+     * 
+     * @param key the user input
+     */
+    public void changeCanvasSize (int key) {
+        Dimension bounds = myView.getSize();
+        if (key == INCREASE_SIZE) {
+            if (myView.getKeysPressed().contains(key)) {
+                myView.clearKeys();
+                bounds.setSize(bounds.width + RESIZE_FACTOR, bounds.height + RESIZE_FACTOR);
+                myView.setSize(bounds);
+            }
+        }
+        if (key == DECREASE_SIZE) {
+            if (myView.getKeysPressed().contains(key)) {
+                myView.clearKeys();
+                bounds.setSize(bounds.width - RESIZE_FACTOR, bounds.height - RESIZE_FACTOR);
+                myView.setSize(bounds);
+            }
+        }
+    }
+
+    /**
      * Update simulation for this moment, given the time since the last moment.
      * 
-     * @param elapsedTime
+     * @param elapsedTime framerate
      */
     public void update (double elapsedTime) {
         int key = myView.getLastKeyPressed();
@@ -80,48 +119,78 @@ public class Model {
         toggleRightWallRepulsion(key);
         toggleLeftWallRepulsion(key);
         clear(key);
+      
+        changeCanvasSize(key);
+        
+        
+        Dimension bounds = myView.getSize();
 
-        for (Assembly a : myAssemblies) {
-            a.update(elapsedTime);
+        for (Assembly assem : myAssemblies) {
+            assem.update(elapsedTime);
+            for (Mass m : assem.getMasses()) {
+                myWallRepulsion.update(bounds, m);
+                myGravity.applyGravity(m);
+                myViscosity.update(m);
+            }
         }
     }
+    
+    
+    
 
+    /**
+     * Toggles top wall repulsion
+     * 
+     * @param key input from user
+     */
     public void toggleTopWallRepulsion (int key) {
         if (key == TOP_WALL) {
             myView.setLastKeyPressed();
-            for (Assembly a : myAssemblies) {
-                a.getWallRepulsion().toggleTopRepulsion();
-            }
+            myWallRepulsion.toggleTopRepulsion();
         }
     }
 
+    /**
+     * Toggles bottom wall repulsion
+     * 
+     * @param key input from user
+     */
     public void toggleBottomWallRepulsion (int key) {
         if (key == BOTTOM_WALL) {
             myView.setLastKeyPressed();
-            for (Assembly a : myAssemblies) {
-                a.getWallRepulsion().toggleBottomRepulsion();
-            }
+            myWallRepulsion.toggleBottomRepulsion();
         }
     }
 
+    /**
+     * Toggles right wall repulsion
+     * 
+     * @param key input from user
+     */
     public void toggleRightWallRepulsion (int key) {
         if (key == RIGHT_WALL) {
             myView.setLastKeyPressed();
-            for (Assembly a : myAssemblies) {
-                a.getWallRepulsion().toggleRightRepulsion();
-            }
+            myWallRepulsion.toggleRightRepulsion();
         }
     }
 
+    /**
+     * toggles left wall repulsion
+     * 
+     * @param key input from user
+     */
     public void toggleLeftWallRepulsion (int key) {
         if (key == LEFT_WALL) {
             myView.setLastKeyPressed();
-            for (Assembly a : myAssemblies) {
-                a.getWallRepulsion().toggleLeftRepulsion();
-            }
+            myWallRepulsion.toggleLeftRepulsion();
         }
     }
 
+    /**
+     * toggles center of mass
+     * 
+     * @param key input from user
+     */
     public void toggleCenterOfMass (int key) {
         if (key == CENTER_OF_MASS_TOGGLE) {
             myView.setLastKeyPressed();
@@ -131,24 +200,35 @@ public class Model {
         }
     }
 
+    /**
+     * toggles viscosity
+     * 
+     * @param key input from user
+     */
     public void toggleViscosity (int key) {
         if (key == VISCOSITY_TOGGLE) {
             myView.setLastKeyPressed();
-            for (Assembly a : myAssemblies) {
-                a.getViscosity().toggleViscosity();
-            }
+            myViscosity.toggleViscosity();
         }
     }
 
+    /**
+     * toggles gravity
+     * 
+     * @param key input from user
+     */
     public void toggleGravity (int key) {
         if (key == GRAVITY_TOGGLE) {
             myView.setLastKeyPressed();
-            for (Assembly a : myAssemblies) {
-                a.getGravity().toggleGravity();
-            }
+            myGravity.toggleGravity();
         }
     }
 
+    /**
+     * loads another assembly
+     * 
+     * @param key input from user
+     */
     public void loadFile (int key) {
         if (key == LOAD_NEW) {
             myView.setLastKeyPressed();
@@ -157,7 +237,12 @@ public class Model {
             myView.loadModel(assem);
         }
     }
-    
+
+    /**
+     * clears objects from all assemblies
+     * 
+     * @param key input from user
+     */
     public void clear (int key) {
         if (key == CLEAR) {
             myView.setLastKeyPressed();

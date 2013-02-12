@@ -11,7 +11,7 @@ import java.util.Scanner;
  * An assembly class that creates
  * The masses, springs, and muscles
  * 
- * @author Robert C. Duvall
+ * @author Jerry Li & Bill Muensterman
  */
 public class Factory {
     // data file keywords
@@ -26,8 +26,8 @@ public class Factory {
     /**
      * load the model
      * 
-     * @param model the game model
-     * @param modelFile the model file
+     * @param assembly     the Assembly
+     * @param modelFile    the file to load from
      */
     public void loadModel (Assembly assembly, File modelFile) {
         try {

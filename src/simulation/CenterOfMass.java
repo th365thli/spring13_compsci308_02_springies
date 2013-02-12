@@ -3,17 +3,34 @@ package simulation;
 import java.awt.geom.Point2D;
 import util.Vector;
 
-
+/**
+ * Details a force that attracts masses
+ * to the center of mass
+ * 
+ * @author Jerry Li & Bill Muensterman
+ *
+ */
 public class CenterOfMass {
 
     private double myCenterOfMassForce;
     private double myTempForce;
-
+    
+    /**
+     * Constructs an object that pulls
+     * masses toward the center of mass
+     * @param force     The power of the attraction
+     */
     public CenterOfMass (double force) {
         myCenterOfMassForce = force;
         myTempForce = force;
     }
-
+    
+    /**
+     * Applies the force to the mass
+     * @param m                 The mass object
+     * @param myCenterXMass     Center of mass x coordinate
+     * @param myCenterYMass     Center of mass y coordinate
+     */
     public void update (Mass m, double myCenterXMass, double myCenterYMass) {
         applyCenterOfMass(m, myCenterXMass, myCenterYMass);
     }
@@ -44,7 +61,11 @@ public class CenterOfMass {
 
         m.applyForce(v);
     }
-
+    
+    /**
+     * Toggles center of mass force on or off
+     * by changing force value
+     */
     public void toggleCenterOfMass () {
         if (myCenterOfMassForce != 0) {
             myCenterOfMassForce = 0;

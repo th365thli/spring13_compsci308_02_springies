@@ -15,8 +15,14 @@ import util.Vector;
  * @author Robert C. Duvall
  */
 public class Spring extends Sprite {
-    // reasonable default values
+
+    /**
+     * Default image for spring
+     */
     public static final Pixmap DEFUALT_IMAGE = new Pixmap("spring.gif");
+    /**
+     * default size of spring
+     */
     public static final int IMAGE_HEIGHT = 20;
 
     private Mass myStart;
@@ -27,10 +33,10 @@ public class Spring extends Sprite {
     /**
      * Constructs spring based on masses its connected to, length, and k values
      * 
-     * @param start
-     * @param end
-     * @param length
-     * @param kVal
+     * @param start     first mass
+     * @param end       second mass
+     * @param length    default length
+     * @param kVal      hooke's constant
      */
     public Spring (Mass start, Mass end, double length, double kVal) {
         super(DEFUALT_IMAGE, getCenter(start, end), getSize(start, end));
@@ -43,7 +49,7 @@ public class Spring extends Sprite {
     /**
      * Set the length of the spring
      * 
-     * @param x
+     * @param x         length to set to
      */
     public void setLength (double x) {
         myLength = x;
@@ -61,7 +67,7 @@ public class Spring extends Sprite {
     /**
      * Paint spring on canvas
      * 
-     * @param pen
+     * @param pen       graphics pen
      */
     @Override
     public void paint (Graphics2D pen) {
@@ -74,8 +80,8 @@ public class Spring extends Sprite {
      * Applies hookes law to mass.
      * Updates sprite values based on attached masses
      * 
-     * @param elapsedTime
-     * @param bounds
+     * @param elapsedTime       frames
+     * @param bounds            size of simulation
      */
     @Override
     public void update (double elapsedTime, Dimension bounds) {
@@ -99,11 +105,15 @@ public class Spring extends Sprite {
      * @param diff
      */
     protected Color getColor (double diff) {
-        if (Vector.fuzzyEquals(diff, 0))
+        if (Vector.fuzzyEquals(diff, 0)) {
             return Color.BLACK;
-        else if (diff < 0.0)
+        }
+        else if (diff < 0.0) {
             return Color.BLUE;
-        else return Color.RED;
+        }
+        else {
+            return Color.RED;
+        }
     }
 
     /**
@@ -126,5 +136,19 @@ public class Spring extends Sprite {
      */
     private static Dimension getSize (Mass start, Mass end) {
         return new Dimension((int) start.distance(end), IMAGE_HEIGHT);
+    }
+    
+    /**
+     * set parameters
+     * @param start     mass to set
+     * @param end       mass to set
+     * @param length    length to set
+     * @param kVal      hooke's constant to set
+     */
+    public void setParameters (Mass start, Mass end, double length, double kVal) {
+        myStart = start;
+        myEnd = end;
+        myLength = length;
+        myK = kVal;
     }
 }

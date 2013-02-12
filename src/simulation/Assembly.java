@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import view.Canvas;
 
-
+/**
+ * Details a class that contains springs and masses 
+ * and center of mass force
+ * @author Jerry Li & Bill Muensterman
+ *
+ */
 public class Assembly {
 
-    private Gravity myGravity;
-    private Viscosity myViscosity;
-    private WallRepulsion myWallRepulsion;
-
-    private double myGravitySpeed = 7;
-    private double myViscosityValue = 1;
-    private double myWallRepulsionFactor = -.01;
 
     private double myCenterExponentValue = 2;
 
@@ -33,14 +31,19 @@ public class Assembly {
 
     private double myCenterXMass;
     private double myCenterYMass;
-
+    
+    
+    /**
+     * Constructs Assembly that is displayed on canvas
+     * @param canvas    The view
+     */
     public Assembly (Canvas canvas) {
         myView = canvas;
         myMasses = new ArrayList<Mass>();
         mySprings = new ArrayList<Spring>();
-        myGravity = new Gravity(myGravitySpeed);
-        myViscosity = new Viscosity(myViscosityValue);
-        myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
+//        myGravity = new Gravity(myGravitySpeed);
+//        myViscosity = new Viscosity(myViscosityValue);
+//        myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
         myCenterOfMass = new CenterOfMass(myCenterExponentValue);
     }
 
@@ -53,18 +56,12 @@ public class Assembly {
         return myMasses;
     }
 
-    public Gravity getGravity () {
-        return myGravity;
-    }
-
-    public WallRepulsion getWallRepulsion () {
-        return myWallRepulsion;
-    }
-
-    public Viscosity getViscosity () {
-        return myViscosity;
-    }
-
+    
+    /**
+     * Returns the center of mass
+     * @return
+     */
+   
     public CenterOfMass getCenterOfMass () {
         return myCenterOfMass;
     }
@@ -96,7 +93,7 @@ public class Assembly {
     /**
      * Update simulation for this moment, given the time since the last moment.
      * 
-     * @param elapsedTime
+     * @param elapsedTime       Framerate
      */
     public void update (double elapsedTime) {
         calculateCenterXMass();
@@ -107,9 +104,9 @@ public class Assembly {
             s.update(elapsedTime, bounds);
         }
         for (Mass m : myMasses) {
-            myWallRepulsion.update(bounds, m);
-            myGravity.update(m);
-            myViscosity.update(m);
+//            myWallRepulsion.update(bounds, m);
+//            myGravity.update(m);
+//            myViscosity.update(m);
             myCenterOfMass.update(m, myCenterXMass, myCenterYMass);
             m.update(elapsedTime, bounds);
         }
@@ -161,7 +158,6 @@ public class Assembly {
         }
 
         myCenterXMass = myTotalXMass / myTotalMass;
-        // System.out.println(centerXMass);
         myTotalXMass = 0;
         myTotalMass = 0;
     }
@@ -169,7 +165,7 @@ public class Assembly {
     /**
      * Add given mass to this simulation.
      * 
-     * @param mass
+     * @param mass      The mass object
      */
     public void add (Mass mass) {
         myMasses.add(mass);
@@ -178,12 +174,15 @@ public class Assembly {
     /**
      * Add given spring to this simulation.
      * 
-     * @param spring
+     * @param spring    spring object
      */
     public void add (Spring spring) {
         mySprings.add(spring);
     }
-
+    
+    /**
+     * clears Assembly of all objects
+     */
     public void clear () {
         myMasses.clear();
         mySprings.clear();

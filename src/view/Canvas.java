@@ -151,15 +151,17 @@ public class Canvas extends JComponent {
         // indirectly causes paint to be called
         repaint();
     }
-
+    
     /**
-     * Create listeners that will update state based on user input.
+     * clear all keys from myKeys
      */
-
     public void clearKeys () {
         myKeys.clear();
     }
-
+    
+    /**
+     *  set last key pressed to -1 to clear value
+     */
     public void setLastKeyPressed () {
         myLastKeyPressed = -1;
     }
@@ -202,7 +204,10 @@ public class Canvas extends JComponent {
         });
     }
 
-    // load model from file chosen by user
+    /**
+     * load model from file chosen by user
+     * @param a         the assembly
+     */
     public void loadModel (Assembly a) {
         Factory factory = new Factory();
         int response = INPUT_CHOOSER.showOpenDialog(null);
