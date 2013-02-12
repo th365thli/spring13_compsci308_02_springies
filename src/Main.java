@@ -3,7 +3,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import view.Canvas;
 
-//git test 123
+
+// git test 123
 /**
  * Creates window that can be moved, resized, and closed by the user.
  * 

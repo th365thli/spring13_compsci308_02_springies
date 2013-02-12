@@ -30,7 +30,7 @@ public class Mass extends Sprite {
         super(DEFUALT_IMAGE, new Location(x, y), DEFAULT_SIZE);
         myMass = mass;
         myAcceleration = new Vector();
-        
+
     }
 
     /**
@@ -41,16 +41,15 @@ public class Mass extends Sprite {
     public double getMyMass () {
         return myMass;
     }
-    
-    public Vector getAcceleration() {
+
+    public Vector getAcceleration () {
         return myAcceleration;
     }
-    
-    public void changeAcceleration(Vector v) {
+
+    public void changeAcceleration (Vector v) {
         myAcceleration = v;
     }
-    
-    
+
     /**
      * Updates mass position based on forces acting upon it.
      * Calls update methods for gravity, viscosity, wall repulsion

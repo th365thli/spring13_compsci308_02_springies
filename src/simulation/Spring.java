@@ -26,6 +26,7 @@ public class Spring extends Sprite {
 
     /**
      * Constructs spring based on masses its connected to, length, and k values
+     * 
      * @param start
      * @param end
      * @param length
@@ -59,6 +60,7 @@ public class Spring extends Sprite {
 
     /**
      * Paint spring on canvas
+     * 
      * @param pen
      */
     @Override
@@ -71,6 +73,7 @@ public class Spring extends Sprite {
     /**
      * Applies hookes law to mass.
      * Updates sprite values based on attached masses
+     * 
      * @param elapsedTime
      * @param bounds
      */
@@ -92,6 +95,7 @@ public class Spring extends Sprite {
 
     /**
      * Convenience method.
+     * 
      * @param diff
      */
     protected Color getColor (double diff) {

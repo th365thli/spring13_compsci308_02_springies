@@ -26,8 +26,8 @@ public class Factory {
     /**
      * load the model
      * 
-     * @param model      the game model
-     * @param modelFile  the model file
+     * @param model the game model
+     * @param modelFile the model file
      */
     public void loadModel (Model model, File modelFile) {
         try {

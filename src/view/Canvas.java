@@ -147,10 +147,15 @@ public class Canvas extends JComponent {
     /**
      * Create listeners that will update state based on user input.
      */
-    
-    public void clearKeys(){
+
+    public void clearKeys () {
         myKeys.clear();
     }
+
+    public void setLastKeyPressed () {
+        myLastKeyPressed = -1;
+    }
+
     private void setInputListeners () {
         // initialize input state
         myLastKeyPressed = NO_KEY_PRESSED;
@@ -179,6 +184,7 @@ public class Canvas extends JComponent {
             @Override
             public void mousePressed (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
+                // mySimulation.drag(); }
             }
 
             @Override
@@ -196,5 +202,5 @@ public class Canvas extends JComponent {
             factory.loadModel(mySimulation, INPUT_CHOOSER.getSelectedFile());
         }
     }
-    
+
 }

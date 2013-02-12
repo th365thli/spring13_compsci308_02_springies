@@ -4,31 +4,31 @@ import util.Vector;
 
 
 public class Gravity {
-   
+
     private double myGravitySpeed;
-    private double myRoggleGravitySpeedHolder;
-    
-    public Gravity(double grav) {
+    private double myToggleGravitySpeedHolder;
+
+    public Gravity (double grav) {
         myGravitySpeed = grav;
-        myRoggleGravitySpeedHolder = grav;
+        myToggleGravitySpeedHolder = grav;
     }
-    
-    public void update(Mass m) {
+
+    public void update (Mass m) {
         applyGravity(m);
     }
-    
+
     public void applyGravity (Mass m) {
         Vector downwardAcceleration = new Vector(90, myGravitySpeed);
         m.applyForce(downwardAcceleration);
     }
-    
-    public void toggleGravity() {
-       if (myGravitySpeed != 0) {
-           myGravitySpeed = 0;
-       }
-       else {
-           myGravitySpeed = myRoggleGravitySpeedHolder;
-       }
+
+    public void toggleGravity () {
+        if (myGravitySpeed != 0) {
+            myGravitySpeed = 0;
+        }
+        else {
+            myGravitySpeed = myToggleGravitySpeedHolder;
+        }
     }
 
 }
