@@ -49,6 +49,7 @@ public class Canvas extends JComponent {
     public static final int NO_KEY_PRESSED = -1;
     public static final Point NO_MOUSE_PRESSED = null;
 
+    private boolean myMouseClicked = false;
     private Assembly myAssembly;
 
     // drives the animation
@@ -165,6 +166,10 @@ public class Canvas extends JComponent {
     public void setLastKeyPressed () {
         myLastKeyPressed = -1;
     }
+    
+    public boolean getMouseClick() {
+        return myMouseClicked;
+    }
 
     private void setInputListeners () {
         // initialize input state
@@ -194,12 +199,15 @@ public class Canvas extends JComponent {
             @Override
             public void mousePressed (MouseEvent e) {
                 myLastMousePosition = e.getPoint();
-                // mySimulation.drag(); }
+                myMouseClicked = true;
+                
+                
             }
 
             @Override
             public void mouseReleased (MouseEvent e) {
                 myLastMousePosition = NO_MOUSE_PRESSED;
+                myMouseClicked = false;
             }
         });
     }

@@ -2,19 +2,25 @@ package simulation;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import view.Canvas;
 
+
 /**
- * Details a class that contains springs and masses 
+ * Details a class that contains springs and masses
  * and center of mass force
+ * 
  * @author Jerry Li & Bill Muensterman
- *
+ * 
  */
 public class Assembly {
 
-
+    private static int CLICK = MouseEvent.MOUSE_PRESSED;
     private double myCenterExponentValue = 2;
 
     private Canvas myView;
@@ -31,19 +37,28 @@ public class Assembly {
 
     private double myCenterXMass;
     private double myCenterYMass;
-    
-    
+
+    // private PointerInfo myPointer = MouseInfo.getPointerInfo();
+    // private Point myPoint = myPointer.getLocation();
+    private double myMouseX;
+    private double myMouseY;
+
+    private Mass myMouseMass = new FixedMass(myMouseX, myMouseY, -1);
+
+    private Spring myMouseSpring = new Spring(myMouseMass, myMouseMass, 0, 0);
+
     /**
      * Constructs Assembly that is displayed on canvas
-     * @param canvas    The view
+     * 
+     * @param canvas The view
      */
     public Assembly (Canvas canvas) {
         myView = canvas;
         myMasses = new ArrayList<Mass>();
         mySprings = new ArrayList<Spring>();
-//        myGravity = new Gravity(myGravitySpeed);
-//        myViscosity = new Viscosity(myViscosityValue);
-//        myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
+        // myGravity = new Gravity(myGravitySpeed);
+        // myViscosity = new Viscosity(myViscosityValue);
+        // myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
         myCenterOfMass = new CenterOfMass(myCenterExponentValue);
     }
 
@@ -56,12 +71,12 @@ public class Assembly {
         return myMasses;
     }
 
-    
     /**
      * Returns the center of mass
+     * 
      * @return
      */
-   
+
     public CenterOfMass getCenterOfMass () {
         return myCenterOfMass;
     }
@@ -76,7 +91,9 @@ public class Assembly {
             s.paint(pen);
         }
         for (Mass m : myMasses) {
-            m.paint(pen);
+            if (m != myMouseMass) {
+                m.paint(pen);
+            }
         }
     }
 
@@ -93,23 +110,64 @@ public class Assembly {
     /**
      * Update simulation for this moment, given the time since the last moment.
      * 
-     * @param elapsedTime       Framerate
+     * @param elapsedTime Framerate
      */
     public void update (double elapsedTime) {
+        int key = myView.getLastKeyPressed();
+
         calculateCenterXMass();
         calculateCenterYMass();
+
+        PointerInfo a = MouseInfo.getPointerInfo();
+        Point b = a.getLocation();
+        myMouseX = b.getX();
+        myMouseY = b.getY();
+        myMouseMass.setCenter(myMouseX, myMouseY);
+
+        Mass closestMassToMouse = findClosestMassToMouse();
+        myMouseSpring.setParameters(myMouseMass, closestMassToMouse,
+                                    myMouseMass.distance(closestMassToMouse) / 2, 1);
+
+        drag();
 
         Dimension bounds = myView.getSize();
         for (Spring s : mySprings) {
             s.update(elapsedTime, bounds);
         }
         for (Mass m : myMasses) {
-//            myWallRepulsion.update(bounds, m);
-//            myGravity.update(m);
-//            myViscosity.update(m);
             myCenterOfMass.update(m, myCenterXMass, myCenterYMass);
             m.update(elapsedTime, bounds);
         }
+    }
+
+    public void drag () {
+        if (!myView.getMouseClick()) {
+            if (!myMasses.contains(myMouseMass)) {
+                myMasses.add(myMouseMass);
+            }
+            if (!mySprings.contains(myMouseSpring)) {
+                mySprings.add(myMouseSpring);
+
+            }
+        }
+        if (myView.getMouseClick()) {
+            if (myMasses.contains(myMouseMass)) {
+                myMasses.remove(myMouseMass);
+            }
+        }
+    }
+
+    public Mass findClosestMassToMouse () {
+        // public Mass findClosestMassToMouse(Mass mouseMass) {
+        double shortestDistance = -1;
+        Mass closestMass = new Mass(0, 0, 0);
+        for (Mass m : myMasses) {
+            if (m.distance(myMouseMass) < shortestDistance || shortestDistance < 0) {
+                shortestDistance = m.distance(myMouseMass);
+                closestMass = m;
+            }
+        }
+        return closestMass;
     }
 
     /**
@@ -165,7 +223,7 @@ public class Assembly {
     /**
      * Add given mass to this simulation.
      * 
-     * @param mass      The mass object
+     * @param mass The mass object
      */
     public void add (Mass mass) {
         myMasses.add(mass);
@@ -174,12 +232,12 @@ public class Assembly {
     /**
      * Add given spring to this simulation.
      * 
-     * @param spring    spring object
+     * @param spring spring object
      */
     public void add (Spring spring) {
         mySprings.add(spring);
     }
-    
+
     /**
      * clears Assembly of all objects
      */
