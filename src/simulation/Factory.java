@@ -29,7 +29,7 @@ public class Factory {
      * @param model the game model
      * @param modelFile the model file
      */
-    public void loadModel (Model model, File modelFile) {
+    public void loadModel (Assembly assembly, File modelFile) {
         try {
             Scanner input = new Scanner(modelFile);
             while (input.hasNext()) {
@@ -37,16 +37,16 @@ public class Factory {
                 while (line.hasNext()) {
                     String type = line.next();
                     if (MASS_KEYWORD.equals(type)) {
-                        model.add(massCommand(line));
+                        assembly.add(massCommand(line));
                     }
                     else if (SPRING_KEYWORD.equals(type)) {
-                        model.add(springCommand(line));
+                        assembly.add(springCommand(line));
                     }
                     else if (MUSCLE_KEYWORD.equals(type)) {
-                        model.add(muscleCommand(line));
+                        assembly.add(muscleCommand(line));
                     }
                     else if (FIXED_MASS_KEYWORD.equals(type)) {
-                        model.add(fixMassCommand(line));
+                        assembly.add(fixMassCommand(line));
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class Factory {
         double x = line.nextDouble();
         double y = line.nextDouble();
         double mass = line.nextDouble();
-        FixedMass result = new FixedMass(x, y, mass, 0, 5);
+        FixedMass result = new FixedMass(x, y, mass);
         myMasses.put(id, result);
         return result;
     }
@@ -102,7 +102,7 @@ public class Factory {
         double x = line.nextDouble();
         double y = line.nextDouble();
         double mass = line.nextDouble();
-        Mass result = new Mass(x, y, mass, 0, 5);
+        Mass result = new Mass(x, y, mass);
         myMasses.put(id, result);
         return result;
     }

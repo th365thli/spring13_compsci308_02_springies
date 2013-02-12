@@ -19,6 +19,7 @@ import java.util.TreeSet;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.Timer;
+import simulation.Assembly;
 import simulation.Factory;
 import simulation.Model;
 
@@ -48,6 +49,8 @@ public class Canvas extends JComponent {
     public static final int NO_KEY_PRESSED = -1;
     public static final Point NO_MOUSE_PRESSED = null;
 
+    private Assembly myAssembly;
+
     // drives the animation
     private Timer myTimer;
     // game to be animated
@@ -68,6 +71,10 @@ public class Canvas extends JComponent {
         setFocusable(true);
         requestFocus();
         setInputListeners();
+    }
+
+    public Assembly getAssembly () {
+        return myAssembly;
     }
 
     /**
@@ -123,8 +130,9 @@ public class Canvas extends JComponent {
                                 }
                             });
         // start animation
+        myAssembly = new Assembly(this);
         mySimulation = new Model(this);
-        loadModel();
+        loadModel(myAssembly);
         myTimer.start();
     }
 
@@ -195,11 +203,11 @@ public class Canvas extends JComponent {
     }
 
     // load model from file chosen by user
-    public void loadModel () {
+    public void loadModel (Assembly a) {
         Factory factory = new Factory();
         int response = INPUT_CHOOSER.showOpenDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
-            factory.loadModel(mySimulation, INPUT_CHOOSER.getSelectedFile());
+            factory.loadModel(a, INPUT_CHOOSER.getSelectedFile());
         }
     }
 

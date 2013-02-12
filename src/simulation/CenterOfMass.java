@@ -43,7 +43,6 @@ public class CenterOfMass {
         v.setMagnitude(force);
 
         m.applyForce(v);
-        System.out.println(myCenterOfMassForce);
     }
 
     public void toggleCenterOfMass () {

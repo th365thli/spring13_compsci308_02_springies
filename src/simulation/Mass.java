@@ -26,7 +26,7 @@ public class Mass extends Sprite {
      * Constructs a mass based on coordinates, mass value, viscosity, and gravity acting
      * on it
      */
-    public Mass (double x, double y, double mass, double viscosity, double gravity) {
+    public Mass (double x, double y, double mass) {
         super(DEFUALT_IMAGE, new Location(x, y), DEFAULT_SIZE);
         myMass = mass;
         myAcceleration = new Vector();

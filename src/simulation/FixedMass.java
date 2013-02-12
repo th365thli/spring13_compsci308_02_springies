@@ -18,9 +18,8 @@ public class FixedMass extends Mass {
      * @param viscosity
      * @param gravity
      */
-    public FixedMass (double x, double y, double mass, double viscosity,
-                      double gravity) {
-        super(x, y, mass, viscosity, gravity);
+    public FixedMass (double x, double y, double mass) {
+        super(x, y, mass);
 
     }
 
