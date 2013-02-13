@@ -9,7 +9,7 @@ import util.Vector;
  * @author Jerry Li & Bill Muensterman
  *
  */
-public class WallRepulsion {
+public class WallRepulsion extends Force {
     
     private final int myDownDirectionN = 270;
     private final int myUpDirection = 90;
@@ -29,6 +29,7 @@ public class WallRepulsion {
      * @param repulsion         repulsion force
      */
     public WallRepulsion (double repulsion) {
+        super();
         myTopWallRepulsionFactor = repulsion;
         myRightWallRepulsionFactor = repulsion;
         myLeftWallRepulsionFactor = repulsion;
@@ -41,6 +42,7 @@ public class WallRepulsion {
      * @param bounds    size of simulation
      * @param m         the mass object
      */
+    @Override
     public void update (Dimension bounds, Mass m) {
         repel(bounds, m);
     }

@@ -1,5 +1,6 @@
 package simulation;
 
+import java.awt.Dimension;
 import util.Vector;
 
 /**
@@ -8,7 +9,7 @@ import util.Vector;
  * @author Jerry Li & Bill Muensterman
  *
  */
-public class Gravity {
+public class Gravity extends Force {
     
     private static final int DOWN_DIRECTION = 90;
     private double myGravitySpeed;
@@ -21,8 +22,19 @@ public class Gravity {
      * @param grav      Magnitude of the force of gravity
      */
     public Gravity (double grav) {
+        super();
         myGravitySpeed = grav;
         myToggleGravitySpeedHolder = grav;
+    }
+    
+    /**
+     * Update the force being applied to the mass
+     * @param bounds    size of simulation
+     * @param m         mass object
+     */
+    @Override 
+    public void update  (Dimension bounds, Mass m) {
+        applyGravity(m);
     }
     
     /**

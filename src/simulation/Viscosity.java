@@ -1,5 +1,6 @@
 package simulation;
 
+import java.awt.Dimension;
 import util.Vector;
 
 /**
@@ -8,7 +9,7 @@ import util.Vector;
  * @author Jerry Li & Bill Muensterman
  *
  */
-public class Viscosity {
+public class Viscosity extends Force {
 
     private double myViscosityValue;
     private double myTempViscosityValue;
@@ -19,15 +20,18 @@ public class Viscosity {
      * @param visc      the force magnitude
      */
     public Viscosity (double visc) {
+        super();
         myViscosityValue = visc;
         myTempViscosityValue = visc;
     }
     
     /**
      * Applies the force to mass
+     * @param bounds        size of simulation
      * @param m         the mass
      */
-    public void update (Mass m) {
+    @Override
+    public void update (Dimension bounds, Mass m) {
         double viscosity = m.getAcceleration().getMagnitude() * myViscosityValue;
         Vector newAcceleration = new Vector(m.getAcceleration().getDirection(),
                                             m.getAcceleration().getMagnitude() - viscosity);

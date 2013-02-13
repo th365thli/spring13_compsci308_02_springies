@@ -35,19 +35,32 @@ import simulation.Model;
  * @author Robert C Duvall
  */
 public class Canvas extends JComponent {
+    /**
+     * animate 25 times per second if possible
+     */
+    public static final int FRAMES_PER_SECOND = 25;
+    /**
+     * better way to think about timed events (in milliseconds)
+     */
+    public static final int ONE_SECOND = 1000;
+    /**
+     * delay time
+     */
+    public static final int DEFAULT_DELAY = ONE_SECOND / FRAMES_PER_SECOND;
+    /** 
+     *  only one so that it maintains user's preferences
+     */
+    public static final int NO_KEY_PRESSED = -1;
+    /**
+     * If no mouseis pressed
+     */
+    public static final Point NO_MOUSE_PRESSED = null;
+    
     // default serialization ID
     private static final long serialVersionUID = 1L;
-    // animate 25 times per second if possible
-    public static final int FRAMES_PER_SECOND = 25;
-    // better way to think about timed events (in milliseconds)
-    public static final int ONE_SECOND = 1000;
-    public static final int DEFAULT_DELAY = ONE_SECOND / FRAMES_PER_SECOND;
-    // only one so that it maintains user's preferences
     private static final JFileChooser INPUT_CHOOSER =
             new JFileChooser(System.getProperties().getProperty("user.dir"));
     // input state
-    public static final int NO_KEY_PRESSED = -1;
-    public static final Point NO_MOUSE_PRESSED = null;
 
     private boolean myMouseClicked = false;
     private Assembly myAssembly;
@@ -63,6 +76,7 @@ public class Canvas extends JComponent {
 
     /**
      * Create a panel so that it knows its size
+     * @param size      size of the simulation
      */
     public Canvas (Dimension size) {
         // set size (a bit of a pain)
@@ -73,7 +87,11 @@ public class Canvas extends JComponent {
         requestFocus();
         setInputListeners();
     }
-
+    
+    /**
+     * Return initial assembly created
+     * @return
+     */
     public Assembly getAssembly () {
         return myAssembly;
     }
@@ -119,7 +137,8 @@ public class Canvas extends JComponent {
     }
 
     /**
-     * Start the animation.
+     * Start the animation. Creates a new
+     * assembly. Creates a new model.
      */
     public void start () {
         // create a timer to animate the canvas
@@ -167,6 +186,10 @@ public class Canvas extends JComponent {
         myLastKeyPressed = -1;
     }
     
+    /**
+     * Return if mouse was clicked
+     * @return
+     */
     public boolean getMouseClick() {
         return myMouseClicked;
     }

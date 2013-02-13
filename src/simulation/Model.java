@@ -15,7 +15,7 @@ import view.Canvas;
  */
 public class Model {
     private static final double GRAVITY_SPEED = 7;
-    private static final double VISCOSITY = .01;
+    private static final double VISCOSITY = .9;
     private static final double WALL_REPULSION = -.01;
     private static final int LOAD_NEW = KeyEvent.VK_N;
     private static final int GRAVITY_TOGGLE = KeyEvent.VK_G;
@@ -38,6 +38,7 @@ public class Model {
     // simulation state
     private List<Mass> myMasses;
     private List<Assembly> myAssemblies;
+    private List<Force> myForces;
 
     private Gravity myGravity;
     private Viscosity myViscosity;
@@ -45,18 +46,30 @@ public class Model {
 
     /**
      * Create a game of the given size with the given display for its shapes.
-     * 
+     * Adds assembly created in canvas to assembly list. We realize model and canvas
+     * interaction is probably not ideal, but this works for now. 
      * @param canvas the game canvas
      */
     public Model (Canvas canvas) {
         myView = canvas;
+        initialize();
+        myForces.add(myGravity);
+        myForces.add(myViscosity);
+        myForces.add(myWallRepulsion);
+        myAssemblies.add(myView.getAssembly());
+
+    }
+    
+    /**
+     * Create objects and list of objects
+     */
+    public void initialize() {
         myMasses = new ArrayList<>();
         myAssemblies = new ArrayList<>();
+        myForces = new ArrayList<>();
         myGravity = new Gravity(myGravitySpeed);
         myViscosity = new Viscosity(myViscosityValue);
         myWallRepulsion = new WallRepulsion(myWallRepulsionFactor);
-        myAssemblies.add(myView.getAssembly());
-
     }
 
     /**
@@ -104,39 +117,41 @@ public class Model {
 
     /**
      * Update simulation for this moment, given the time since the last moment.
+     * Checks input. Iterates through each assembly. For each assembly, iterates
+     * through each mass
      * 
      * @param elapsedTime framerate
      */
     public void update (double elapsedTime) {
-        int key = myView.getLastKeyPressed();
-
-        toggleGravity(key);
-        loadFile(key);
-        toggleViscosity(key);
-        toggleCenterOfMass(key);
-        toggleTopWallRepulsion(key);
-        toggleBottomWallRepulsion(key);
-        toggleRightWallRepulsion(key);
-        toggleLeftWallRepulsion(key);
-        clear(key);
-      
-        changeCanvasSize(key);
-        
-        
+        checkInput();
         Dimension bounds = myView.getSize();
-
         for (Assembly assem : myAssemblies) {
             assem.update(elapsedTime);
             for (Mass m : assem.getMasses()) {
-                myWallRepulsion.update(bounds, m);
-                myGravity.applyGravity(m);
-                myViscosity.update(m);
+                for (Force f : myForces) {
+                    f.update(bounds, m);
+                }
             }
         }
     }
     
     
-    
+    /**
+     * Checks input from user
+     */
+    public void checkInput () {
+        int key = myView.getLastKeyPressed();
+        changeCanvasSize(key);
+        loadFile(key);
+        toggleGravity(key);
+        toggleViscosity(key);
+        toggleCenterOfMass(key);
+        toggleTopWallRepulsion(key);
+        toggleLeftWallRepulsion(key);
+        toggleRightWallRepulsion(key);
+        toggleBottomWallRepulsion(key);
+        clear(key);
+    }
 
     /**
      * Toggles top wall repulsion
