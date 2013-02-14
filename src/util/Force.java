@@ -1,11 +1,12 @@
-package simulation;
+package util;
 
 import java.awt.Dimension;
+import simulation.Mass;
 
 /**
  * Details an abstract class that is an
  * abstract "force"
- * @author Jerry Li
+ * @author Jerry Li & Bill Muensterman
  *
  */
 public abstract class Force {

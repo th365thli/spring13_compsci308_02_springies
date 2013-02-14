@@ -1,6 +1,7 @@
 package simulation;
 
 import java.awt.Dimension;
+import util.Force;
 import util.Vector;
 
 /**

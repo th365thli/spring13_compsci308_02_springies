@@ -12,7 +12,7 @@ import util.Vector;
 /**
  * A class that details a spring that acts upon masses
  * 
- * @author Robert C. Duvall
+ * @author Jerry Li & Bill Muensterman
  */
 public class Spring extends Sprite {
 

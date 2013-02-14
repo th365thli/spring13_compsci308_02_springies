@@ -42,7 +42,7 @@ public class Assembly {
     private double myMouseY;
 
     private Mass myMouseMass = new FixedMass(myMouseX, myMouseY, -1);
-    private Mass myClosestMassToMouse = new Mass(0, 0 ,0);
+    private Mass myClosestMassToMouse = new Mass(0, 0, 0);
     private Spring myMouseSpring = new Spring(myMouseMass, myMouseMass, 0, 0);
 
     /**
